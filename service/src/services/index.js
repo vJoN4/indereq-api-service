@@ -10,6 +10,8 @@ const asistencias = require('./asistencias/asistencias.service.js');
 const eventos = require('./eventos/eventos.service.js');
 const eventosDetails = require('./eventos-details/eventos-details.service.js');
 
+const equipoPdf = require('./equipo-pdf/equipo-pdf.service.js');
+
 module.exports = function (app) {
   app.configure(roles);
   app.configure(users);
@@ -21,4 +23,5 @@ module.exports = function (app) {
   app.configure(asistencias);
   app.configure(eventos);
   app.configure(eventosDetails);
+  app.configure(equipoPdf);
 };
