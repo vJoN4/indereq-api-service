@@ -43,11 +43,15 @@ module.exports = {
           horaSalida: null
         }});
 
+        const deportista = await context.app.service('deportistas').get(id);
+
       // ? If there is an asistencia with the same date and no horaSalida, then update it
       if (asistencias.data.length === 1) {
         context.result = await context.app.service('asistencias').patch(asistencias.data[0].id, {
           horaSalida: parsedDateTime
         });
+
+        context.result.deportista = deportista;
         delete context.data;
         return context;
       } 
@@ -57,7 +61,7 @@ module.exports = {
           deportista_id: id,
           fecha: parsedDate,
           horaEntrada: parsedDateTime,
-          horaSalida: null
+          horaSalida: null,
         };
       }
 
@@ -74,7 +78,18 @@ module.exports = {
     all: [],
     find: [],
     get: [],
-    create: [],
+    create: [async context => {
+
+      const { result } = context;
+      const { deportista_id } = result;
+
+      const deportista = await context.app.service('deportistas').get(deportista_id);
+
+      context.result = {
+        ...result,
+        deportista,
+      }
+    }],
     update: [],
     patch: [],
     remove: []
