@@ -25,11 +25,14 @@ module.exports = function (app) {
         allowNull: false,
       },
       permissions: {
-        type: DataTypes.JSON,
-        defaultValue: '[]',
+        type: DataTypes.TEXT('long'),
+
+        // ? Mariadb
+        // type: DataTypes.JSON,
+        // defaultValue: '[]',
       },
       status: {
-        type: Sequelize.DataTypes.SMALLINT,
+        type: DataTypes.SMALLINT,
         allowNull: false,
         defaultValue: 1,
       },
@@ -48,7 +51,7 @@ module.exports = function (app) {
     }
   );
 
-  roles.sync();
+  roles.sync({ alter: true });
 
   return roles;
 };
