@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "homepage": "INDEREQ API",
   "private": true,
-  "main": "src",
+  "main": "src/index.js",
   "keywords": [
     "feathers"
   ],
