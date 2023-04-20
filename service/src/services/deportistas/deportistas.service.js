@@ -3,7 +3,7 @@ const { Deportistas } = require('./deportistas.class');
 const createModel = require('../../models/deportistas.model');
 const hooks = require('./deportistas.hooks');
 const multer = require('multer');
-const upload = multer()
+const upload = multer();
 const { uploadImage } = require('../../utils/uploadImages');
 
 const Schema = require('../../schemas/deportistas.schema');
@@ -40,12 +40,29 @@ module.exports = function (app) {
           }
         }
 
+        // ? Validate unique expediente
+        const { expediente } = req.body;
+
+        const deportista = await app.service('deportistas').find({
+          paginate: false,
+          query: {
+            expediente
+          }
+        });
+
+        if (deportista.length > 0) {
+          try {
+            throw new Error(`El deportista con el expediente ${expediente} ya existe.`);
+          } catch (err) {
+            next(err);
+          }
+        } 
+
         // ? Upload files
         try {
           const foto = await uploadImage("foto", req.files.foto[0]);
           const fotoCardex = await uploadImage("fotoCardex", req.files.fotoCardex[0]);
           const fotoIdentificacionOficial = await uploadImage("fotoIdentificacionOficial", req.files.fotoIdentificacionOficial[0]);
-
 
           req.body.foto = foto;
           req.body.fotoCardex = fotoCardex;
