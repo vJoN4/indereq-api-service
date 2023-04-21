@@ -28,7 +28,7 @@ const uploadImage = async (key, file) => {
     // const path = `uploads/${filename}`;
     const path = `../service/public/uploads/${filename}`;
     
-    if (!!JSON.parse(process.env.USE_LOCAl)) {
+    if (process.env.USE_LOCAl === 'true') {
       try {
           // Mover la imagen
           fs.writeFile(path, file.buffer, (err) => {
