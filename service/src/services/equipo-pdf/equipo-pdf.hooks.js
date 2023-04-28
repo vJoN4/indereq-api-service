@@ -128,7 +128,7 @@ module.exports = {
             numberRow: i + 1,
             apellidos: d.apellidos,
             nombres: d.nombres,
-            numJugador: d.numJugador,
+            numJugador: d.numJugador || '',
           }));
 
           const pdf = await builPDF(equipoData, aJugadores);
