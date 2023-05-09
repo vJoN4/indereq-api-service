@@ -7,18 +7,35 @@ const fnCustomPopulate = iff(
   isProvider('rest'),
   async context => {
     const sequelize = context.app.get('sequelizeClient'),
-      { deportistas } = sequelize.models;
+    { deportistas } = sequelize.models;
 
-    context.params.sequelize = {
-      include: [
-        {
-          model: deportistas,
-          attributes: ['id', 'nombres', 'apellidos'],
+    if(context.params.query.fechaInicio && context.params.query.fechaFin){
+      context.params.sequelize = {
+        where: {
+          fecha: {
+            [Op.between]: [context.params.query.fechaInicio, context.params.query.fechaFin]
+          }
         },
-      ],
-      raw: false,
-    };
-  },
+        include: [
+          {
+            model: deportistas,
+            attributes: ['id', 'nombres', 'apellidos'],
+          },
+        ],
+        raw: false,
+      };
+    }else{
+      context.params.sequelize = {
+        include: [
+          {
+            model: deportistas,
+            attributes: ['id', 'nombres', 'apellidos'],
+          },
+        ],
+        raw: false,
+      };
+    }
+  }
 );
 
 module.exports = {
