@@ -12,6 +12,8 @@ const eventosDetails = require('./eventos-details/eventos-details.service.js');
 
 const equipoPdf = require('./equipo-pdf/equipo-pdf.service.js');
 
+const tiempoEntrenamiento = require('./tiempo-entrenamiento/tiempo-entrenamiento.service.js');
+
 module.exports = function (app) {
   app.configure(roles);
   app.configure(users);
@@ -24,4 +26,5 @@ module.exports = function (app) {
   app.configure(eventos);
   app.configure(eventosDetails);
   app.configure(equipoPdf);
+  app.configure(tiempoEntrenamiento);
 };
