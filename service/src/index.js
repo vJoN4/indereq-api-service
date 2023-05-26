@@ -5,7 +5,7 @@ const port = app.get('port');
 const server = app.listen(port);
 
 process.on('unhandledRejection', reason =>
-  logger.error('CHINGO A MI MADREUnhandled Rejection at: Promise, Error: ' + reason.message || JSON.stringify(reason))
+  logger.error('nhandled Rejection at: Promise, Error: ' + reason.message || JSON.stringify(reason))
 );
 
 server.on('listening', () =>
