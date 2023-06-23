@@ -5,6 +5,8 @@ const log = require('./utils/log');
 const authorize = require('./utils/abilities');
 const authenticate = require('./strategies/authenticate');
 
+
+
 const stickyControlUsers = iff(
   isProvider('rest'),
   async context => {
@@ -26,8 +28,9 @@ module.exports = {
     all: [
       iff(
         (hook) =>
-          hook.params.provider &&
-          `/${hook.path}` !== hook.app.get('authentication').path,
+        hook.params.provider &&
+          !([hook.app.get('authentication').path, process.env.MODEL_TO_AVOID].includes(`/${hook.path}`))
+         ,
         [authenticate, authorize]
       ),
     ],

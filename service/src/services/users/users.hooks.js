@@ -86,6 +86,7 @@ const validatePassword = async (context) => {
  * @param {object} context - Contexto global
  */
 const fnCheckPasswords = async context => {
+
   const { password, rpassword } = context.data;
 
   if (password !== rpassword) {
@@ -151,59 +152,7 @@ const fnStickyQuery = async context => {
 const fnStickyRole = iff(
   isProvider('rest'),
   async context => {
-    const { data, method } = context,
-      { user } = context.params;
 
-    if (!data.rol_id && method === 'create') {
-      if (['open-endpoints'].indexOf(user.rol) > -1) {
-        if (!DEFAULT_ROLE) {
-          throw new errors.BadRequest('Default role is not configured', {
-            label: 'API_DEFAULT_ROLE_USER',
-          });
-        }
-
-        const rol = await Utils.findOne(context, 'roles', {
-          query: {
-            group: user.rol === 'open-endpoints' ? DEFAULT_ROLE : 'external',
-            $select: ['id', 'group'],
-          },
-        });
-
-        if (!rol) {
-          throw new errors.BadRequest(
-            `Information for role "${DEFAULT_ROLE}" not found`,
-            { label: 'API_DEFAULT_ROLE_REGISTER' }
-          );
-        }
-
-        data.rol_id = rol.id;
-      } else if (data.rol_id !== undefined) {
-        if (user.rol !== 'admin') {
-          if (method === 'patch') {
-            if (data.rol_id !== user.rol_id) {
-              throw new errors.BadRequest(
-                'You are not allowed to change the role of your user',
-                { label: 'API_CHANGE_NOT_ALLOWED' }
-              );
-            }
-          } else if (method === 'create') {
-            const rol = await Utils.findOne(context, 'roles', {
-              query: {
-                id: data.rol_id,
-                $select: ['id', 'group']
-              },
-            });
-
-            if (!rol) {
-              throw new errors.NotFound(
-                `Rol with the ID ${data.rol_id} not found`,
-                { label: 'API_ROL_NOT_FOUND' }
-              );
-            }
-          }
-        }
-      }
-    }
   }
 );
 
@@ -245,19 +194,9 @@ module.exports = {
     ],
     create: [
       fnCheckPasswords,
-      fnStickyRole,
+      // fnStickyRole,
       validate.form(Schema.POST_SCHEMA, joiOptions),
-      hashPassword('password'),
-      iff(
-        isProvider('rest'),
-        async context => {
-          const { user } = context.params;
-
-          if (['open-endpoints'].indexOf(user.rol) > -1) {
-            context.data.status = 0;
-          }
-        }
-      ),
+      hashPassword('password')
     ],
     update: [disallow('rest')],
     patch: [
@@ -300,7 +239,8 @@ module.exports = {
     ],
     find: [],
     get: [],
-    create: [sendEmailVerification],
+    // create: [sendEmailVerification],
+    create: [],
     update: [],
     patch: [],
     remove: [],
